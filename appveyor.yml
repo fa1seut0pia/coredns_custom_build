@@ -482,6 +482,7 @@ install:
 before_build:
     - go env
     - go version
+    - docker version
 
 # custom build scripts
 build_script:
@@ -527,6 +528,7 @@ build_script:
     - if [ "$GOOS" = "windows" ]; then file ./coredns.exe; else file ./coredns; fi
     - if [ "$GOOS" = "linux" -a "$HOST" = "linux" -a "$GOARCH" = "amd64" ]; then ./coredns -plugins; fi
     - if [ "$GOOS" = "darwin" ]; then ./coredns -plugins; fi
+    # - docker build -t coredns:latest .
     - cd ..
 
 # scripts that run after build
@@ -553,6 +555,8 @@ after_build:
     - sha256sum coredns.zip
     - sha384sum coredns.zip
     - sha512sum coredns.zip
+    # - docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%
+    # - docker push coredns:latest
 
 artifacts:
     - path: distrib/coredns-$PREFIX.zip
